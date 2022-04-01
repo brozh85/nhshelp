@@ -14,7 +14,7 @@ check_package <- function(){
         for (i in pkg) {
             installed <- .libPaths() |> lapply(list.files) |> unlist()
             if (i %in% installed) next(i)
-            install.packages(i)
+            eval(parse(text=sprintf("install.packages('%s')",i)))
         }
     }
 }

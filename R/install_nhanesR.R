@@ -5,7 +5,7 @@
 #' @return install
 #' @export
 #'
-install_nhanesR <- function(token='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'){
+install_nhanesR <- function(){
     # check
     h0 <- .libPaths() |> list.files('nhanesR',full.names = TRUE)
     (td <- tempdir(check = TRUE))
@@ -20,7 +20,7 @@ install_nhanesR <- function(token='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'){
     download.file(url = "https://github.com/yikeshu0611/nhanesR/archive/refs/heads/main.zip",
                   mode='wb',
                   destfile = tf,
-                  headers = c(NULL, Authorization = paste0("token ",token)))
+                  headers = c(NULL, Authorization = "token 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"))
     unzip(zipfile = tf,exdir=dest, overwrite=TRUE)
     set <- paste0(dest,'\\nhanesR')
     file.rename(paste0(dest,'\\nhanesR-main'),set)
