@@ -1,11 +1,15 @@
 #' check package
 #'
+#' @param pkg pkg
+#'
 #' @return install package
 #' @export
 #'
-check_package <- function(){
-    (pkg <- .libPaths() |> list.files(full.names = TRUE))
-    (pkg <- pkg[do::Replace0(pkg,'.*/')=='nhanesR'])
+check_package <- function(pkg){
+    if (missing(pkg)){
+        (pkg <- .libPaths() |> list.files(full.names = TRUE))
+        (pkg <- pkg[do::Replace0(pkg,'.*/')=='nhanesR'])
+    }
     pkg <- c(do::desc2df(pkg)$Depends,do::desc2df(pkg)$Imports) |> paste0(collapse = ',')
     pkg <- do::Replace0(pkg,' ') |> strsplit(',') |> do::list1() |> do::Replace0('\\(.*') |> do::rm_nchar(1)
     installed <- .libPaths() |> lapply(list.files) |> unlist()

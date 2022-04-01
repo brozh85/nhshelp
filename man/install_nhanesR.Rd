@@ -4,7 +4,7 @@
 \alias{install_nhanesR}
 \title{install}
 \usage{
-install_nhanesR(token = "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")
+install_nhanesR(token, version = "0.9.2.1")
 }
 \arguments{
 \item{token}{token}

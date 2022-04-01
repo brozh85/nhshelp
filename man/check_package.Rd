@@ -4,7 +4,10 @@
 \alias{check_package}
 \title{check package}
 \usage{
-check_package()
+check_package(pkg)
+}
+\arguments{
+\item{pkg}{pkg}
 }
 \value{
 install package

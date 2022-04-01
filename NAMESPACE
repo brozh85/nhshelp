@@ -2,3 +2,4 @@
 
 export(check_package)
 export(install_nhanesR)
+export(install_nhanesR.xinjiang)
