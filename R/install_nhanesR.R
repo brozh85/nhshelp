@@ -13,9 +13,10 @@ install_nhanesR <- function(token){
     while(td2 %in% list.files(path = td)){
         td2 <- as.character(as.numeric(td2)+1)
     }
-    (dest <- paste0(td,'\\',td2))
+    (dest <- paste0(td,'/',td2))
+    do::formal_dir(dest)
     dir.create(path = dest,recursive = TRUE,showWarnings = FALSE)
-    (tf <- paste0(dest,'\\nhanesR.zip'))
+    (tf <- paste0(dest,'/nhanesR.zip'))
 
     download.file(url = 'https://codeload.github.com/yikeshu0611/nhanesR/zip/refs/heads/main',
                   destfile = tf,
@@ -23,19 +24,26 @@ install_nhanesR <- function(token){
                   headers = c(NULL,Authorization = sprintf("token %s",token)))
     unzip(zipfile = tf,exdir = dest,overwrite = TRUE)
 
-    main <- paste0(dest,'\\nhanesR-main')
+    main <- paste0(dest,'/nhanesR-main')
+    if (do::is.windows()){
+        nhanesR <- list.files(main,'nhanesR_',full.names = TRUE)
+        nhanesR <- nhanesR[do::right(nhanesR,3)=='zip']
+        k <- do::Replace0(nhanesR,'.*nhanesR_','\\.zip','\\.tgz','\\.') |> as.numeric() |> which.max()
+        unzip(nhanesR[k],files = 'nhanesR/DESCRIPTION',exdir = main)
 
-    nhanesR <- list.files(main,'nhanesR_',full.names = TRUE)
+    }else{
+        nhanesR <- list.files(main,'nhanesR_',full.names = TRUE)
+        nhanesR <- nhanesR[do::right(nhanesR,3)=='tgz']
+        k <- do::Replace0(nhanesR,'.*nhanesR_','\\.zip','\\.tgz','\\.') |> as.numeric() |> which.max()
+        untar(nhanesR[k],files = 'nhanesR/DESCRIPTION',exdir = main)
 
-    k <- do::Replace0(nhanesR,'.*nhanesR_','.zip','\\.') |> as.numeric() |> which.max()
-    unzip(nhanesR[k],files = 'nhanesR/DESCRIPTION',exdir = main)
+    }
 
-
-    desc <- paste0(main,'\\nhanesR')
+    desc <- paste0(main,'/nhanesR')
     check_package(desc)
 
-    install.packages(pkgs = nhanesR[k],repos = NULL)
-
+    install.packages(pkgs = nhanesR[k],repos = NULL,quiet = FALSE)
+    message('Done(nhanesR)')
     x <- suppressWarnings(file.remove(list.files(dest,recursive = TRUE,full.names = TRUE)))
     invisible()
 }

@@ -12,7 +12,7 @@ install_nhanesR.xinjiang <- function () {
     while(td2 %in% list.files(path = td)){
         td2 <- as.character(as.numeric(td2)+1)
     }
-    (buddle <- paste0(td,'\\',td2))
+    (buddle <- paste0(td,'/',td2))
     dir.create(path = buddle,recursive = TRUE,showWarnings = FALSE)
     (file <- tempfile(tmpdir = td,pattern = paste0(td2,'-------')) |> do::Replace0('-----.*'))
 
@@ -23,7 +23,7 @@ install_nhanesR.xinjiang <- function () {
     nhanesR <- list.files(buddle,'nhanesR_',full.names = TRUE)
     k <- do::Replace0(nhanesR,'.*nhanesR_','.zip','\\.') |> as.numeric() |> which.max()
     unzip(nhanesR[k],files = 'nhanesR/DESCRIPTION',exdir = buddle)
-    pkg <- paste0(buddle,'\\nhanesR')
+    pkg <- paste0(buddle,'/nhanesR')
     check_package(pkg)
     install.packages(nhanesR[k],repos = NULL)
     file.remove(list.files(buddle,full.names = TRUE,recursive = TRUE))
