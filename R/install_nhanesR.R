@@ -5,7 +5,7 @@
 #' @return install
 #' @export
 #'
-install_nhanesR <- function(token,version='0.9.2.1'){
+install_nhanesR <- function(token){
     e <- tryCatch(detach("package:nhanesR", unload = TRUE),error=function(e) 'e')
     # check
     (td <- tempdir(check = TRUE))
@@ -17,17 +17,26 @@ install_nhanesR <- function(token,version='0.9.2.1'){
     dir.create(path = dest,recursive = TRUE,showWarnings = FALSE)
     (tf <- paste0(dest,'\\nhanesR.zip'))
 
-    download.file(url = sprintf('https://raw.githubusercontent.com/yikeshu0611/nhanesR/main/nhanesR_%s.zip',version),
+    download.file(url = 'https://codeload.github.com/yikeshu0611/nhanesR/zip/refs/heads/main',
                   destfile = tf,
+                  mode='wb',
                   headers = c(NULL,Authorization = sprintf("token %s",token)))
+    unzip(zipfile = tf,exdir = dest,overwrite = TRUE)
 
-    unzip(zipfile = tf,files = 'nhanesR/DESCRIPTION',exdir = dest,overwrite = TRUE)
-    desc <- paste0(dest,'\\nhanesR')
+    main <- paste0(dest,'\\nhanesR-main')
+
+    nhanesR <- list.files(main,'nhanesR_',full.names = TRUE)
+
+    k <- do::Replace0(nhanesR,'.*nhanesR_','.zip','\\.') |> as.numeric() |> which.max()
+    unzip(nhanesR[k],files = 'nhanesR/DESCRIPTION',exdir = main)
+
+
+    desc <- paste0(main,'\\nhanesR')
     check_package(desc)
 
-    install.packages(pkgs = tf,repos = NULL)
+    install.packages(pkgs = nhanesR[k],repos = NULL)
 
-    x <- suppressWarnings(file.remove(list.files(dest,recursive = TRUE)))
+    x <- suppressWarnings(file.remove(list.files(dest,recursive = TRUE,full.names = TRUE)))
     invisible()
 }
 
